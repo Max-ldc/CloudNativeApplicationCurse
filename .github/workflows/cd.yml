@@ -5,6 +5,11 @@ on:
     branches: [main]
   workflow_dispatch:  # Allows manual trigger from GitHub UI
 
+env:
+  POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+  POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+  POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+
 jobs:
   deploy:
     name: Deploy to Local Environment
@@ -13,6 +18,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Create .env file from production template and secrets
+        run: |
+          cp .env.production .env
+          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+        working-directory: ${{ github.workspace }}
 
       - name: Stop existing containers
         run: docker compose down
