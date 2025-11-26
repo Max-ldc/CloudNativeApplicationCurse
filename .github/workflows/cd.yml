@@ -20,7 +20,7 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     defaults:
       run:
-        shell: pwsh
+        shell: powershell
 
     steps:
       - name: Checkout code
@@ -32,7 +32,7 @@ jobs:
           $content += "`nPOSTGRES_DB=${{ secrets.POSTGRES_DB }}"
           $content += "`nPOSTGRES_USER=${{ secrets.POSTGRES_USER }}"
           $content += "`nPOSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}"
-          $content | Out-File -FilePath ".env" -Encoding utf8NoBOM
+          [System.IO.File]::WriteAllText(".env", $content)
 
       - name: Stop existing containers
         run: docker compose down
