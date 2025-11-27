@@ -30,11 +30,11 @@ jobs:
           $content += "`nPOSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}"
           [System.IO.File]::WriteAllText(".env", $content)
 
-      - name: Stop existing containers
-        run: docker compose down
+      - name: Build updated images
+        run: docker compose build
 
-      - name: Build and start containers
-        run: docker compose up -d --build
+      - name: Deploy (preserves database volume)
+        run: docker compose up -d --remove-orphans
 
       - name: Show running containers
         run: docker compose ps
