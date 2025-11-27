@@ -19,9 +19,9 @@ COPY . .
 # Generate Prisma client
 RUN npx prisma generate
 
-# Copy entrypoint script
+# Copy entrypoint script and fix line endings
 COPY entrypoint.sh .
-RUN chmod +x entrypoint.sh
+RUN sed -i 's/\r$//' entrypoint.sh && chmod +x entrypoint.sh
 
 # Make port 3000 available to the world outside this container
 EXPOSE 3000
