@@ -29,8 +29,8 @@ EXPOSE 3000
 # Add healthcheck
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 CMD curl -f http://localhost:3000/health || exit 1
 
-# Run the entrypoint script with shell explicitly
-ENTRYPOINT ["/bin/sh", "./entrypoint.sh"]
+# Run the entrypoint script with bash explicitly
+ENTRYPOINT ["/bin/bash", "./entrypoint.sh"]
 
 # Run the command to start the server
 CMD [ "npm", "run", "dev" ]
