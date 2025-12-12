@@ -10,7 +10,7 @@ on:
 jobs:
   # Backend CI
   backend:
-    name: Backend - Install, Test & Lint
+    name: Backend - Install, Test, Lint & SAST
     runs-on: self-hosted
     defaults:
       run:
@@ -66,11 +66,32 @@ jobs:
       - name: Build application
         run: npm run build
 
+  # Security Checks (SCA)
+  security:
+    name: Security Checks (SCA)
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Backend Audit
+        working-directory: ./backend
+        run: npm audit --audit-level=high || true # Fail only on critical/high if you remove || true
+
+      - name: Frontend Audit
+        working-directory: ./frontend
+        run: npm audit --audit-level=high || true
+
   # Build Docker Images
   docker:
     name: Build Docker Images
     runs-on: self-hosted
-    needs: [backend, frontend]
+    needs: [backend, frontend, security]
 
     steps:
       - name: Checkout code
