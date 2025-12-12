@@ -89,6 +89,19 @@ jobs:
         run: npm audit --audit-level=high
         continue-on-error: true
 
+      - name: Pull Trivy Security Scanner
+        run: docker pull aquasec/trivy:latest
+
+      - name: Scan Backend Dockerfile
+        working-directory: ./backend
+        run: docker run --rm -v "${PWD}:/app" aquasec/trivy config /app --severity HIGH,CRITICAL
+        continue-on-error: true
+
+      - name: Scan Frontend Dockerfile
+        working-directory: ./frontend
+        run: docker run --rm -v "${PWD}:/app" aquasec/trivy config /app --severity HIGH,CRITICAL
+        continue-on-error: true
+
   # Build Docker Images
   docker:
     name: Build Docker Images
