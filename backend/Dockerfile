@@ -33,4 +33,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 CMD curl 
 ENTRYPOINT ["/bin/bash", "./entrypoint.sh"]
 
 # Run the command to start the server
-CMD [ "npm", "run", "dev" ]
+CMD [ "npm", "start" ]

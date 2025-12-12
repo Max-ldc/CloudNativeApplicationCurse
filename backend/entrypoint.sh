@@ -17,9 +17,8 @@ npx prisma migrate deploy
 
 # Seed the database only if it's empty
 echo "Checking if database needs seeding..."
-# Check if users table has any records using raw SQL
-RESULT=$(npx prisma db execute --stdin <<< "SELECT COUNT(*) as count FROM users;" 2>&1)
-USER_COUNT=$(echo "$RESULT" | grep -oE '[0-9]+' | tail -1)
+# Check if users table has any records using Prisma Client directly to avoid parsing issues
+USER_COUNT=$(node -e 'const { PrismaClient } = require("@prisma/client"); const prisma = new PrismaClient(); prisma.user.count().then(console.log).catch(e => { console.error(e); console.log(0); }).finally(() => prisma.$disconnect())')
 
 if [ -z "$USER_COUNT" ] || [ "$USER_COUNT" = "0" ]; then
   echo "Database is empty (users: $USER_COUNT). Seeding..."
