@@ -81,11 +81,13 @@ jobs:
 
       - name: Backend Audit
         working-directory: ./backend
-        run: npm audit --audit-level=high || true # Fail only on critical/high if you remove || true
+        run: npm audit --audit-level=high
+        continue-on-error: true
 
       - name: Frontend Audit
         working-directory: ./frontend
-        run: npm audit --audit-level=high || true
+        run: npm audit --audit-level=high
+        continue-on-error: true
 
   # Build Docker Images
   docker:
